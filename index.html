@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sila's 6 Times Table Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#fff7ec; --ink:#2b2350; --muted:#7a7499; --card:#ffffff;
+    --pink:#ff6fa5; --purple:#8a5cf6; --teal:#16b8a6; --yellow:#ffc93c; --red:#ff5c5c; --green:#22c55e;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Baloo 2",system-ui,sans-serif;background:var(--bg);color:var(--ink);
+    min-height:100vh;display:flex;justify-content:center;
+    background-image:radial-gradient(circle at 10% 10%,#ffe1ef 0 80px,transparent 81px),
+      radial-gradient(circle at 90% 20%,#e3f7ff 0 110px,transparent 111px),
+      radial-gradient(circle at 85% 90%,#fff0c2 0 90px,transparent 91px);}
+  .wrap{width:100%;max-width:560px;padding:18px 16px 40px}
+  h1{font-size:30px;line-height:1.1;margin:8px 0 2px;text-align:center}
+  h1 span{color:var(--pink)}
+  .sub{text-align:center;color:var(--muted);margin:0 0 16px;font-size:17px}
+  .card{background:var(--card);border-radius:26px;padding:22px;box-shadow:0 8px 0 #eadff7,0 12px 30px rgba(60,40,120,.08)}
+  .levels{display:grid;gap:10px}
+  .lvl{display:flex;align-items:center;gap:12px;border:none;border-radius:18px;padding:12px 14px;
+    font:inherit;font-size:18px;color:var(--ink);background:#f4f0ff;cursor:pointer;text-align:left}
+  .lvl:hover{background:#ebe4ff}
+  .lvl .n{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;flex:none}
+  .lvl .t{flex:1;line-height:1.15}
+  .lvl .t small{display:block;color:var(--muted);font-size:14px}
+  .lvl .stars{font-size:16px;letter-spacing:1px}
+  .big{display:block;width:100%;border:none;border-radius:20px;padding:16px;font:inherit;font-weight:800;font-size:22px;
+    color:#fff;background:var(--pink);box-shadow:0 6px 0 #d94d84;cursor:pointer;margin-top:14px}
+  .big:active{transform:translateY(3px);box-shadow:0 3px 0 #d94d84}
+  .big.alt{background:var(--purple);box-shadow:0 6px 0 #6a3fd6}
+  .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:16px;color:var(--muted)}
+  .home{border:none;background:#f4f0ff;color:var(--ink);font:inherit;border-radius:12px;padding:4px 12px;cursor:pointer}
+  .bar{height:14px;background:#f1ecfb;border-radius:10px;overflow:hidden;margin-bottom:16px}
+  .bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--purple));border-radius:10px;transition:width .3s}
+  .tag{display:inline-block;padding:2px 12px;border-radius:20px;color:#fff;font-size:15px;font-weight:700}
+  .q{font-size:46px;font-weight:800;text-align:center;margin:18px 0 6px;line-height:1.15}
+  .q.word{font-size:22px;font-weight:700;text-align:left;line-height:1.35}
+  .q .blank{display:inline-block;min-width:60px;border-bottom:5px dashed var(--yellow);color:var(--purple)}
+  .opts{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+  .opt{border:none;border-radius:22px;padding:20px 8px;font:inherit;font-size:40px;font-weight:800;color:#fff;cursor:pointer;
+    transition:transform .1s}
+  .opt:nth-child(1){background:var(--teal);box-shadow:0 7px 0 #0f8e80}
+  .opt:nth-child(2){background:var(--purple);box-shadow:0 7px 0 #6a3fd6}
+  .opt:active{transform:translateY(3px)}
+  .opt.right{background:var(--green)!important;box-shadow:0 7px 0 #169a48!important}
+  .opt.wrong{background:var(--red)!important;box-shadow:0 7px 0 #d23c3c!important;opacity:.85}
+  .opt:disabled{cursor:default}
+  .fb{min-height:34px;text-align:center;font-size:21px;font-weight:700;margin-top:14px}
+  .fb.good{color:var(--green)} .fb.bad{color:var(--red)}
+  .hintbtn{display:block;margin:10px auto 0;border:2px dashed #d6cbf5;background:none;color:var(--purple);font:inherit;
+    font-size:16px;border-radius:14px;padding:4px 14px;cursor:pointer}
+  .dots{display:none;margin:12px auto 0;width:max-content;max-width:100%;padding:10px 12px;background:#fffbea;border-radius:16px}
+  .dots.show{display:block}
+  .row{display:flex;gap:5px;margin:4px 0;align-items:center}
+  .row b{width:13px;height:13px;border-radius:50%;background:var(--yellow);display:inline-block}
+  .row em{font-style:normal;font-size:13px;color:var(--muted);margin-left:6px;min-width:22px}
+  .dots p{margin:6px 0 0;font-size:15px;color:var(--muted);text-align:center}
+  .end{text-align:center}
+  .end .trophy{font-size:70px;line-height:1}
+  .end .score{font-size:44px;font-weight:800;margin:4px 0}
+  .end .bigstars{font-size:40px;letter-spacing:4px}
+  .review{text-align:left;background:#fff3f3;border-radius:16px;padding:10px 14px;margin-top:12px;font-size:18px}
+  .review div{padding:2px 0}
+  .pop{animation:pop .35s}
+  @keyframes pop{0%{transform:scale(.85)}60%{transform:scale(1.06)}100%{transform:scale(1)}}
+  .shake{animation:shake .35s}
+  @keyframes shake{25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+  .confetti{position:fixed;top:-20px;font-size:26px;pointer-events:none;animation:fall 1.6s linear forwards}
+  @keyframes fall{to{transform:translateY(105vh) rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+
+<script>
+const NAME = "Sila";
+const COLORS = ["#16b8a6","#3b82f6","#8a5cf6","#ff6fa5","#f59e0b","#ef4444"];
+const rand = n => Math.floor(Math.random()*n);
+const shuffle = a => { a=[...a]; for(let i=a.length-1;i>0;i--){const j=rand(i+1);[a[i],a[j]]=[a[j],a[i]]} return a; };
+
+/* distractor: close but wrong, never negative, never equal */
+function near(ans, step){
+  const c = [ans+step, ans-step, ans+1, ans-1].filter(x => x>0 && x!==ans);
+  return c[rand(c.length)];
+}
+
+/* ---------- Levels: easy → hard, then division ---------- */
+const LEVELS = [
+  { title:"Warm Up", note:"6 × 1 to 6 × 5, in order", make(){
+      return [1,2,3,4,5].map(n => ({ text:`6 × ${n} = ?`, ans:6*n, wrong:near(6*n,6), dots:{rows:n} }));
+  }},
+  { title:"Keep Climbing", note:"6 × 6 to 6 × 10, in order", make(){
+      return [6,7,8,9,10].map(n => ({ text:`6 × ${n} = ?`, ans:6*n, wrong:near(6*n,6), dots:{rows:n} }));
+  }},
+  { title:"Mix It Up", note:"6 × 1 to 6 × 10, any order", make(){
+      return shuffle([1,2,3,4,5,6,7,8,9,10]).slice(0,8).map(n => ({ text:`6 × ${n} = ?`, ans:6*n, wrong:near(6*n,6), dots:{rows:n} }));
+  }},
+  { title:"Turn It Around", note:"n × 6 and the missing number", make(){
+      const a = shuffle([3,4,6,7,8,9]).slice(0,4).map(n => ({ text:`${n} × 6 = ?`, ans:6*n, wrong:near(6*n,6), dots:{rows:n} }));
+      const b = shuffle([2,4,5,6,7,8,9,10]).slice(0,4).map(n => ({ html:`6 × <span class="blank">?</span> = ${6*n}`, ans:n, wrong:near(n,1), dots:{rows:n, missing:true} }));
+      return shuffle([...a,...b]);
+  }},
+  { title:"Division Begins", note:"Sharing into 6 groups ÷ 6", make(){
+      return [12,18,30,24,36,42].map(t => ({ text:`${t} ÷ 6 = ?`, ans:t/6, wrong:near(t/6,1), dots:{rows:t/6, div:true} }));
+  }},
+  { title:"Division Mix", note:"÷ 6 in any order", make(){
+      return shuffle([1,2,3,4,5,6,7,8,9,10]).slice(0,8).map(n => ({ text:`${6*n} ÷ 6 = ?`, ans:n, wrong:near(n,1), dots:{rows:n, div:true} }));
+  }},
+  { title:"Super Challenge", note:"Missing numbers & word problems", make(){
+      const ns = shuffle([4,6,7,8,9]);
+      const qs = [
+        { html:`<span class="blank">?</span> ÷ 6 = ${ns[0]}`, ans:6*ns[0], wrong:near(6*ns[0],6), dots:{rows:ns[0], div:true} },
+        { html:`${6*ns[1]} ÷ <span class="blank">?</span> = 6`, ans:ns[1], wrong:near(ns[1],1), dots:{rows:ns[1], div:true} },
+        { word:true, text:`${NAME} has ${6*ns[2]} stickers. She shares them equally between 6 friends. How many stickers does each friend get?`, ans:ns[2], wrong:near(ns[2],1), dots:{rows:ns[2], div:true} },
+        { word:true, text:`There are ${ns[3]} boxes. Each box has 6 cupcakes. How many cupcakes are there in total?`, ans:6*ns[3], wrong:near(6*ns[3],6), dots:{rows:ns[3]} },
+        { word:true, text:`A teacher puts ${6*ns[4]} pencils into groups of 6. How many groups are there?`, ans:ns[4], wrong:near(ns[4],1), dots:{rows:ns[4], div:true} },
+        { word:true, text:`A spider has 8 legs, but a bug has 6 legs. How many legs do 5 bugs have?`, ans:30, wrong:40, dots:{rows:5} }
+      ];
+      return qs;
+  }}
+];
+
+/* ---------- saved stars (this browser only) ---------- */
+function loadStars(){ try{ return JSON.parse(localStorage.getItem("sila6stars")||"{}"); }catch(e){ return {}; } }
+function saveStars(i,s){ try{ const o=loadStars(); if(!o[i]||s>o[i]){o[i]=s; localStorage.setItem("sila6stars",JSON.stringify(o));} }catch(e){} }
+
+/* ---------- sound ---------- */
+let ac;
+function beep(good){
+  try{
+    ac = ac || new (window.AudioContext||window.webkitAudioContext)();
+    const notes = good ? [660,880] : [260,200];
+    notes.forEach((f,i)=>{
+      const o=ac.createOscillator(), g=ac.createGain();
+      o.type= good?"triangle":"sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(.18, ac.currentTime+i*.12);
+      g.gain.exponentialRampToValueAtTime(.001, ac.currentTime+i*.12+.2);
+      o.connect(g); g.connect(ac.destination); o.start(ac.currentTime+i*.12); o.stop(ac.currentTime+i*.12+.22);
+    });
+  }catch(e){}
+}
+
+const app = document.getElementById("app");
+let state = {};
+
+const PRAISE = ["Great job, "+NAME+"! 🌟","Super, "+NAME+"! 🎉","You got it! 💪","Amazing! ⭐","Brilliant! 🦄","Well done! 🌈"];
+
+function home(){
+  const st = loadStars();
+  app.innerHTML = `
+    <h1>${NAME}'s <span>6 Times Table</span> Quiz</h1>
+    <p class="sub">Start at Level 1 and climb all the way to division! 🚀</p>
+    <div class="card">
+      <div class="levels">
+        ${LEVELS.map((L,i)=>`
+          <button class="lvl" data-i="${i}">
+            <span class="n" style="background:${COLORS[i%COLORS.length]}">${i+1}</span>
+            <span class="t">${L.title}<small>${L.note}</small></span>
+            <span class="stars">${st[i] ? "⭐".repeat(st[i]) + "☆".repeat(3-st[i]) : "☆☆☆"}</span>
+          </button>`).join("")}
+      </div>
+      <button class="big" id="all">Play all levels ▶</button>
+    </div>`;
+  app.querySelectorAll(".lvl").forEach(b => b.onclick = () => start(+b.dataset.i, false));
+  document.getElementById("all").onclick = () => start(0, true);
+}
+
+function start(i, chain){
+  const qs = LEVELS[i].make().map(q => ({...q, opts: shuffle([q.ans, q.wrong])}));
+  state = { lvl:i, chain, qs, k:0, score:0, missed:[], firstTry:true };
+  ask();
+}
+
+function dotsHTML(d, q){
+  const rows = d.rows;
+  let h = "";
+  for(let r=0;r<rows;r++){
+    h += `<div class="row">${"<b></b>".repeat(6)}<em>${(r+1)*6}</em></div>`;
+  }
+  let msg = d.div
+    ? `${rows*6} dots in rows of 6 → count the rows!`
+    : d.missing ? `How many rows of 6 make ${rows*6}?` : `${rows} rows of 6 — count by 6s!`;
+  return h + `<p>${msg}</p>`;
+}
+
+function ask(){
+  const s = state, q = s.qs[s.k], L = LEVELS[s.lvl];
+  s.firstTry = true;
+  app.innerHTML = `
+    <div class="top">
+      <button class="home" id="home">🏠 Home</button>
+      <span>Level ${s.lvl+1} · Question ${s.k+1} of ${s.qs.length}</span>
+    </div>
+    <div class="bar"><i style="width:${(s.k/s.qs.length)*100}%"></i></div>
+    <div class="card pop" id="card">
+      <span class="tag" style="background:${COLORS[s.lvl%COLORS.length]}">${L.title}</span>
+      <div class="q ${q.word?"word":""}">${q.html || q.text}</div>
+      <div class="opts">
+        ${q.opts.map(o=>`<button class="opt" data-v="${o}">${o}</button>`).join("")}
+      </div>
+      <div class="fb" id="fb"></div>
+      <button class="hintbtn" id="hint">💡 Show me a picture</button>
+      <div class="dots" id="dots">${dotsHTML(q.dots, q)}</div>
+    </div>`;
+  document.getElementById("home").onclick = home;
+  document.getElementById("hint").onclick = () => document.getElementById("dots").classList.toggle("show");
+  app.querySelectorAll(".opt").forEach(b => b.onclick = () => pick(b, q));
+}
+
+function pick(btn, q){
+  const s = state, fb = document.getElementById("fb"), card = document.getElementById("card");
+  const v = +btn.dataset.v;
+  if(v === q.ans){
+    btn.classList.add("right");
+    app.querySelectorAll(".opt").forEach(b => b.disabled = true);
+    if(s.firstTry) s.score++;
+    fb.className = "fb good";
+    fb.textContent = PRAISE[rand(PRAISE.length)];
+    beep(true);
+    setTimeout(next, 1000);
+  } else {
+    btn.classList.add("wrong"); btn.disabled = true;
+    if(s.firstTry){ s.missed.push(q); s.firstTry = false; }
+    fb.className = "fb bad";
+    fb.textContent = "Oops! Try the other one 😊";
+    card.classList.remove("shake"); void card.offsetWidth; card.classList.add("shake");
+    document.getElementById("dots").classList.add("show");
+    beep(false);
+  }
+}
+
+function next(){
+  const s = state;
+  s.k++;
+  if(s.k < s.qs.length) ask(); else finish();
+}
+
+function confetti(){
+  const e = ["⭐","🎉","🌈","💖","✨","🦄"];
+  for(let i=0;i<24;i++){
+    const d=document.createElement("div"); d.className="confetti";
+    d.textContent=e[rand(e.length)]; d.style.left=rand(100)+"vw"; d.style.animationDelay=(Math.random()*.6)+"s";
+    document.body.appendChild(d); setTimeout(()=>d.remove(),2400);
+  }
+}
+
+function finish(){
+  const s = state, n = s.qs.length, pct = s.score/n;
+  const stars = pct===1 ? 3 : pct>=.75 ? 2 : pct>=.5 ? 1 : 0;
+  saveStars(s.lvl, stars);
+  if(stars>=2) confetti();
+  const last = s.lvl === LEVELS.length-1;
+  const msg = stars===3 ? `Perfect, ${NAME}! You're a 6 times table star!` :
+              stars===2 ? `Great work, ${NAME}! Almost perfect!` :
+              stars===1 ? `Good try, ${NAME}! Let's practise a bit more.` :
+                          `Keep going, ${NAME}! Practice makes perfect 💪`;
+  const fmt = q => q.html ? q.html.replace(/<[^>]+>/g,"").replace("?","__") + `  →  ${q.ans}` : (q.word ? q.text + `  →  ${q.ans}` : q.text.replace("?", q.ans));
+  app.innerHTML = `
+    <div class="top"><button class="home" id="home">🏠 Home</button><span>Level ${s.lvl+1} done!</span></div>
+    <div class="bar"><i style="width:100%"></i></div>
+    <div class="card end pop">
+      <div class="trophy">${stars===3?"🏆":stars>=1?"🎖️":"🌱"}</div>
+      <div class="score">${s.score} / ${n}</div>
+      <div class="bigstars">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+      <p style="font-size:20px;margin:8px 0 0">${msg}</p>
+      ${s.missed.length ? `<div class="review"><b>Let's remember these:</b>${s.missed.map(q=>`<div>• ${fmt(q)}</div>`).join("")}</div>` : ""}
+      ${s.missed.length ? `<button class="big alt" id="retry">Practise the tricky ones 🔁</button>` : ""}
+      <button class="big" id="again">${s.chain && !last ? "Next level ▶" : last ? "Play this level again 🔄" : "Play again 🔄"}</button>
+    </div>`;
+  document.getElementById("home").onclick = home;
+  if(s.missed.length) document.getElementById("retry").onclick = () => {
+    const qs = shuffle(s.missed).map(q => ({...q, opts: shuffle([q.ans, q.wrong])}));
+    state = { lvl:s.lvl, chain:false, qs, k:0, score:0, missed:[], firstTry:true };
+    ask();
+  };
+  document.getElementById("again").onclick = () => {
+    if(s.chain && !last) start(s.lvl+1, true); else start(s.lvl, s.chain && !last);
+  };
+}
+
+home();
+</script>
+</body>
+</html>
